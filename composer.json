@@ -1,0 +1,20 @@
+{
+    "name": "kubinyete/template-sdk-php",
+    "description": "Base template for generating highly optimized webservice SDKs",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Kubinyete\\TemplateSdkPhp\\": "src/",
+            "Kubinyete\\OpenMeteoSdkPhp\\": "examples/OpenMeteo"
+        }
+    },
+    "authors": [
+        {
+            "name": "Vitor Kubinyete",
+            "email": "vitorkubinyete@hotmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.5"
+    }
+}
