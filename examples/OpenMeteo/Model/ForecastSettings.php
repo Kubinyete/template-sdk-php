@@ -34,6 +34,6 @@ class ForecastSettings implements SerializableModelInterface
 
     public function jsonSerialize(): array
     {
-        return ['latidude' => 'awdawd'];
+        return get_object_vars($this);
     }
 }

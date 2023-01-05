@@ -7,9 +7,10 @@ use Kubinyete\TemplateSdkPhp\Exception\HttpException;
 use Kubinyete\TemplateSdkPhp\Http\Client\BaseHttpClient;
 use Kubinyete\TemplateSdkPhp\Http\Response;
 use Kubinyete\TemplateSdkPhp\IO\SerializerInterface;
+use Kubinyete\TemplateSdkPhp\Path\CompositePathInterface;
 use Throwable;
 
-abstract class Client
+abstract class Client implements CompositePathInterface
 {
     protected Environment $environment;
     protected BaseHttpClient $httpClient;
@@ -23,11 +24,6 @@ abstract class Client
     }
 
     //
-
-    protected function endpoint(string $name = '', ?SerializerInterface $serializer = null): Endpoint
-    {
-        return new Endpoint($this, $this->environment, $name, $serializer);
-    }
 
     protected function serialize($body): ?string
     {
@@ -48,6 +44,8 @@ abstract class Client
         return $body;
     }
 
+    //
+
     protected function responseReceived(Response $response): Response
     {
         return $response;
@@ -59,6 +57,36 @@ abstract class Client
     }
 
     //
+
+    protected function get(string $path, array $query = [], array $header = []): Response
+    {
+        return $this->request(__FUNCTION__, $this->joinPath($path), null, $query, $header);
+    }
+
+    protected function post(string $path, $body, array $query = [], array $header = []): Response
+    {
+        return $this->request(__FUNCTION__, $this->joinPath($path), $body, $query, $header);
+    }
+
+    protected function put(string $path, $body, array $query = [], array $header = []): Response
+    {
+        return $this->request(__FUNCTION__, $this->joinPath($path), $body, $query, $header);
+    }
+
+    protected function patch(string $path, $body, array $query = [], array $header = []): Response
+    {
+        return $this->request(__FUNCTION__, $this->joinPath($path), $body, $query, $header);
+    }
+
+    protected function delete(string $path, array $query = [], array $header = []): Response
+    {
+        return $this->request(__FUNCTION__, $this->joinPath($path), null, $query, $header);
+    }
+
+    protected function head(string $path, array $query = [], array $header = []): Response
+    {
+        return $this->request(__FUNCTION__, $this->joinPath($path), null, $query, $header);
+    }
 
     public function request(string $method, string $url, $body, array $query = [], array $header = [], ?SerializerInterface $serializer = null): Response
     {
@@ -94,5 +122,33 @@ abstract class Client
         } catch (Throwable $e) {
             $this->exceptionThrown($e);
         }
+    }
+
+    //
+
+    public function getParent(): ?CompositePathInterface
+    {
+        return $this->environment->getParent();
+    }
+
+    public function setParent(?CompositePathInterface $parent): void
+    {
+        $this->environment->setParent($parent);
+    }
+
+    public function getPath(): string
+    {
+        return $this->environment->getPath();
+    }
+
+    public function joinPath(string $relative): string
+    {
+        if (filter_var($relative, FILTER_VALIDATE_URL)) {
+            // If it's a valid URL, that means it's not a relative path, so
+            // don't append it to our base.
+            return $relative;
+        }
+
+        return $this->environment->joinPath($relative);
     }
 }

@@ -9,7 +9,7 @@ use Kubinyete\TemplateSdkPhp\Exception\HttpClientException;
 $client = new OpenMeteoClient();
 
 try {
-    $forecast = $client->getCurrentForecast(new ForecastSettings(52.52, 13.41, true));
+    $forecast = $client->forecast()->now(new ForecastSettings(52.52, 13.41, true));
 
     var_dump($forecast);
 } catch (HttpClientException $e) {

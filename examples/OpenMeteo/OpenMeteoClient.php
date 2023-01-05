@@ -2,6 +2,7 @@
 
 namespace Kubinyete\OpenMeteoSdkPhp;
 
+use Kubinyete\OpenMeteoSdkPhp\Endpoint\ForecastEndpoint;
 use Kubinyete\OpenMeteoSdkPhp\Exception\OpenMeteoException;
 use Kubinyete\TemplateSdkPhp\Core\Client;
 use Kubinyete\TemplateSdkPhp\Core\Endpoint;
@@ -35,17 +36,9 @@ class OpenMeteoClient extends Client
     // This is exposing our endpoint object, on a real
     // project you should wrap everything using models
     // check out our getCurrentForecast implementation below.
-    public function forecast(): Endpoint
+    public function forecast(): ForecastEndpoint
     {
-        return $this->endpoint('forecast');
-    }
-
-    // @NOTE:
-    // Using SerializableModelInterface objects to send and receive responses.
-    public function getCurrentForecast(ForecastSettings $forecastSettings): Forecast
-    {
-        $response = $this->forecast()->get($forecastSettings->jsonSerialize());
-        return Forecast::parse($response->getParsed());
+        return ForecastEndpoint::create($this, $this, __FUNCTION__);
     }
 
     //

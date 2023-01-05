@@ -1,7 +1,7 @@
 {
     "name": "kubinyete/template-sdk-php",
     "description": "Base template for generating highly optimized webservice SDKs",
-    "type": "library",
+    "type": "project",
     "autoload": {
         "psr-4": {
             "Kubinyete\\TemplateSdkPhp\\": "src/",
@@ -15,6 +15,6 @@
         }
     ],
     "require": {
-        "guzzlehttp/guzzle": "^7.5"
+        "guzzlehttp/guzzle": ">=6.0"
     }
 }
