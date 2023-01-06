@@ -38,7 +38,7 @@ class OpenMeteoClient extends Client
     // check out our getCurrentForecast implementation below.
     public function forecast(): ForecastEndpoint
     {
-        return ForecastEndpoint::create($this, $this, __FUNCTION__);
+        return ForecastEndpoint::create($this, $this);
     }
 
     //
