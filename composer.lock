@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "69770d5bc755657acc13685443be28c6",
+    "content-hash": "46149acdfcd2f060e8a9842a945873e9",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -336,6 +336,43 @@
                 }
             ],
             "time": "2022-10-26T14:07:24+00:00"
+        },
+        {
+            "name": "kubinyete/assertation",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Kubinyete/assertation.git",
+                "reference": "e85d845eb89d38dd52423c30003747af6272339e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Kubinyete/assertation/zipball/e85d845eb89d38dd52423c30003747af6272339e",
+                "reference": "e85d845eb89d38dd52423c30003747af6272339e",
+                "shasum": ""
+            },
+            "require-dev": {
+                "symfony/var-dumper": "^5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Kubinyete\\Assertation\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Vitor Kubinyete",
+                    "email": "vitorkubinyete@hotmail.com"
+                }
+            ],
+            "description": "Provides a Assert class that enables you to valide your data",
+            "support": {
+                "issues": "https://github.com/Kubinyete/assertation/issues",
+                "source": "https://github.com/Kubinyete/assertation/tree/0.0.1"
+            },
+            "time": "2023-01-09T14:24:33+00:00"
         },
         {
             "name": "psr/http-client",
