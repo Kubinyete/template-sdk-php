@@ -78,9 +78,9 @@ abstract class Client implements CompositePathInterface
         return $this->request(__FUNCTION__, $this->joinPath($path), $body, $query, $header);
     }
 
-    protected function delete(string $path, array $query = [], array $header = []): Response
+    protected function delete(string $path, $body, array $query = [], array $header = []): Response
     {
-        return $this->request(__FUNCTION__, $this->joinPath($path), null, $query, $header);
+        return $this->request(__FUNCTION__, $this->joinPath($path), $body, $query, $header);
     }
 
     protected function head(string $path, array $query = [], array $header = []): Response
