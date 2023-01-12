@@ -16,6 +16,9 @@
     ],
     "require": {
         "guzzlehttp/guzzle": ">=6.0",
-        "kubinyete/assertation": "^0.0.1"
+        "kubinyete/assertation": "^1.0"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^5.4"
     }
 }
