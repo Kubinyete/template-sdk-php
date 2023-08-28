@@ -8,26 +8,43 @@ use Kubinyete\TemplateSdkPhp\Http\Client\BaseHttpClient;
 use Kubinyete\TemplateSdkPhp\Http\Response;
 use Kubinyete\TemplateSdkPhp\IO\SerializerInterface;
 use Kubinyete\TemplateSdkPhp\Path\CompositePathInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Throwable;
 
 abstract class Client implements CompositePathInterface
 {
+    private static $requestCounter = 0;
+
     protected Environment $environment;
     protected BaseHttpClient $httpClient;
     protected ?SerializerInterface $defaultSerializer;
+    protected ?LoggerInterface $logger;
 
-    public function __construct(Environment $environment, BaseHttpClient $httpClient, ?SerializerInterface $defaultSerializer = null)
+    public function __construct(Environment $environment, BaseHttpClient $httpClient, ?SerializerInterface $defaultSerializer = null, ?LoggerInterface $logger = null)
     {
         $this->environment = $environment;
         $this->httpClient = $httpClient;
         $this->defaultSerializer = $defaultSerializer;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     //
 
-    protected function serialize($body): ?string
+    public function getEnvironment(): Environment
+    {
+        return $this->environment;
+    }
+
+    //
+
+    protected function serialize($body, ?SerializerInterface $serializer = null): ?string
     {
         $serializer ??= $this->defaultSerializer;
+
+        if (!$serializer) {
+            return $body;
+        }
 
         if ($body instanceof JsonSerializable) {
             $body = $body->jsonSerialize();
@@ -88,9 +105,29 @@ abstract class Client implements CompositePathInterface
         return $this->request(__FUNCTION__, $this->joinPath($path), null, $query, $header);
     }
 
-    public function request(string $method, string $url, $body, array $query = [], array $header = [], ?SerializerInterface $serializer = null): Response
-    {
-        $serializer ??= $this->defaultSerializer;
+    public function request(
+        string $method,
+        string $url,
+        $body,
+        array $query = [],
+        array $header = [],
+        ?SerializerInterface $inputSerializer = null,
+        ?SerializerInterface $outputSerializer = null
+    ): Response {
+        $requestId = $this->incrementRequestCounter();
+
+        $outputSerializer ??= $this->defaultSerializer;
+        $inputSerializer ??= $this->defaultSerializer;
+
+        if ($inputSerializer) {
+            $header['Content-Type'] = $header['Content-Type'] ?? $inputSerializer->getContentType();
+        }
+
+        if ($outputSerializer) {
+            $header['Accept'] = $header['Accept'] ?? $outputSerializer->getContentType();
+        }
+
+        $this->logger->debug("({$requestId}) {$method} {$url} : Sending request", ['body' => $body, 'query' => $query, 'header' => $header]);
 
         try {
             $response = $this->httpClient->request(
@@ -102,24 +139,27 @@ abstract class Client implements CompositePathInterface
                 // with another serialization method (Ex: XML) as an string instead of
                 // assuming that the response from the current endpoint is also expecting
                 // to receive XML data.
-                $this->serialize($body),
+                $this->serialize($body, $inputSerializer),
                 $query,
                 $header
             );
 
             $response = Response::from($response);
-            $response->setSerializer($serializer);
+            $response->setSerializer($outputSerializer);
 
+            $this->logger->debug("({$requestId}) {$method} {$url} : Read successful", ['response' => $response->getBody()]);
             return $this->responseReceived($response) ?? $response;
         } catch (HttpException $e) {
             $response = $e->getResponse();
+            $this->logger->error("({$requestId}) {$method} {$url} : Read failed with status code {$e->getStatusCode()} {$e->getStatusMessage()}", ['exception' => strval($e), 'response' => $response ? $response->getBody() : null]);
 
             if ($response) {
-                $response->setSerializer($serializer);
+                $response->setSerializer($outputSerializer);
             }
 
             $this->exceptionThrown($e);
         } catch (Throwable $e) {
+            $this->logger->error("({$requestId}) {$method} {$url} : Read failed with unhandled exception", ['exception' => strval($e)]);
             $this->exceptionThrown($e);
         }
     }
@@ -150,5 +190,10 @@ abstract class Client implements CompositePathInterface
         }
 
         return $this->environment->joinPath($relative);
+    }
+
+    private function incrementRequestCounter(): int
+    {
+        return ++self::$requestCounter;
     }
 }

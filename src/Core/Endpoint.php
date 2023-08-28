@@ -25,43 +25,43 @@ abstract class Endpoint implements CompositePathInterface
 
     //
 
-    protected function get(array $query = [], array $header = []): Response
+    protected function get(array $query = [], array $header = [], ?string $relativeUrl = null): Response
     {
-        return $this->request(__FUNCTION__, null, $query, $header);
+        return $this->request(__FUNCTION__, null, $query, $header, $relativeUrl);
     }
 
-    protected function post($body, array $query = [], array $header = []): Response
+    protected function post($body, array $query = [], array $header = [], ?string $relativeUrl = null): Response
     {
-        return $this->request(__FUNCTION__, $body, $query, $header);
+        return $this->request(__FUNCTION__, $body, $query, $header, $relativeUrl);
     }
 
-    protected function put($body, array $query = [], array $header = []): Response
+    protected function put($body, array $query = [], array $header = [], ?string $relativeUrl = null): Response
     {
-        return $this->request(__FUNCTION__, $body, $query, $header);
+        return $this->request(__FUNCTION__, $body, $query, $header, $relativeUrl);
     }
 
-    protected function patch($body, array $query = [], array $header = []): Response
+    protected function patch($body, array $query = [], array $header = [], ?string $relativeUrl = null): Response
     {
-        return $this->request(__FUNCTION__, $body, $query, $header);
+        return $this->request(__FUNCTION__, $body, $query, $header, $relativeUrl);
     }
 
-    protected function delete(array $query = [], array $header = []): Response
+    protected function delete(array $query = [], array $header = [], ?string $relativeUrl = null): Response
     {
-        return $this->request(__FUNCTION__, null, $query, $header);
+        return $this->request(__FUNCTION__, null, $query, $header, $relativeUrl);
     }
 
-    protected function head(array $query = [], array $header = []): Response
+    protected function head(array $query = [], array $header = [], ?string $relativeUrl = null): Response
     {
-        return $this->request(__FUNCTION__, null, $query, $header);
+        return $this->request(__FUNCTION__, null, $query, $header, $relativeUrl);
     }
 
     //
 
-    protected function request(string $method, $body, array $query = [], array $header = []): Response
+    protected function request(string $method, $body, array $query = [], array $header = [], ?string $relativeUrl = null): Response
     {
         return $this->client->request(
             strtoupper($method),
-            $this->getPath(),
+            $relativeUrl ? $this->joinPath($relativeUrl) : $this->getPath(),
             $body,
             $query,
             $header,
@@ -88,7 +88,7 @@ abstract class Endpoint implements CompositePathInterface
 
     public function joinPath(string $relative): string
     {
-        return implode(PathUtil::PATH_SEPARATOR, [$this->getPath(), $relative]);
+        return implode(PathUtil::PATH_SEPARATOR, [$this->getPath(), ltrim($relative, PathUtil::PATH_SEPARATOR)]);
     }
 
     //

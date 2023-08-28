@@ -36,4 +36,9 @@ class JsonSerializer implements SerializerInterface
 
         return $data;
     }
+
+    public function getContentType(): string
+    {
+        return 'application/json';
+    }
 }
