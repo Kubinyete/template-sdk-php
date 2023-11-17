@@ -6,9 +6,9 @@ use DateTimeInterface;
 use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaAttribute;
 use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaBoolAttribute;
 use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaDateAttribute;
+use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaStringAttribute;
 use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaIntegerAttribute;
 use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaRelationAttribute;
-use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaStringAttribute;
 
 final class Schema
 {
@@ -41,7 +41,7 @@ final class Schema
         return $this->set(SchemaDateAttribute::from($this, $attribute)->format($format));
     }
 
-    public function bool(string $attribute): SchemaIntegerAttribute
+    public function bool(string $attribute): SchemaBoolAttribute
     {
         return $this->set(SchemaBoolAttribute::from($this, $attribute));
     }

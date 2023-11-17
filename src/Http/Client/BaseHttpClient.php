@@ -2,7 +2,7 @@
 
 namespace Kubinyete\TemplateSdkPhp\Http\Client;
 
-use Kubinyete\TemplateSdkPhp\Http\MakesRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 abstract class BaseHttpClient
 {
@@ -19,7 +19,7 @@ abstract class BaseHttpClient
      * @param string|null $body
      * @param array $query
      * @param array $header
-     * @return string|null
+     * @return ResponseInterface
      */
-    public abstract function request(string $method, string $url, ?string $body, array $query = [], array $header = []): ?string;
+    public abstract function request(string $method, string $url, ?string $body, array $query = [], array $header = []): ResponseInterface;
 }

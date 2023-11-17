@@ -2,15 +2,15 @@
 
 namespace Kubinyete\TemplateSdkPhp\Core;
 
+use Throwable;
 use JsonSerializable;
-use Kubinyete\TemplateSdkPhp\Exception\HttpException;
-use Kubinyete\TemplateSdkPhp\Http\Client\BaseHttpClient;
+use Psr\Log\NullLogger;
+use Psr\Log\LoggerInterface;
 use Kubinyete\TemplateSdkPhp\Http\Response;
 use Kubinyete\TemplateSdkPhp\IO\SerializerInterface;
+use Kubinyete\TemplateSdkPhp\Exception\HttpException;
+use Kubinyete\TemplateSdkPhp\Http\Client\BaseHttpClient;
 use Kubinyete\TemplateSdkPhp\Path\CompositePathInterface;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
-use Throwable;
 
 abstract class Client implements CompositePathInterface
 {

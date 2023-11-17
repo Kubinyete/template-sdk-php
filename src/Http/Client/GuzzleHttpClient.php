@@ -2,17 +2,18 @@
 
 namespace Kubinyete\TemplateSdkPhp\Http\Client;
 
+use RuntimeException;
 use GuzzleHttp\Client;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\ConnectException;
+use Kubinyete\TemplateSdkPhp\Http\Response;
 use Kubinyete\TemplateSdkPhp\Exception\HttpClientException;
 use Kubinyete\TemplateSdkPhp\Exception\HttpServerException;
 use Kubinyete\TemplateSdkPhp\Exception\HttpTransferException;
-use Kubinyete\TemplateSdkPhp\Http\Response;
-use Psr\Http\Message\StreamInterface;
-use RuntimeException;
 
 class GuzzleHttpClient extends BaseHttpClient
 {
@@ -50,16 +51,14 @@ class GuzzleHttpClient extends BaseHttpClient
      * @param array $header
      * @return string|null
      */
-    public function request(string $method, string $url, ?string $body, array $query = [], array $header = []): ?string
+    public function request(string $method, string $url, ?string $body, array $query = [], array $header = []): ResponseInterface
     {
         try {
-            $response = $this->client->request($method, $url, [
+            return $this->client->request($method, $url, [
                 'headers' => $header,
                 'query' => $query,
                 'body' => $body,
             ]);
-
-            return $response->getBody()->getContents();
         } catch (ConnectException $e) {
             // Networking error
             throw new HttpTransferException("An networking error ocurred while trying to connect to `$url`", $e->getCode(), $e);
@@ -70,7 +69,7 @@ class GuzzleHttpClient extends BaseHttpClient
                 $e->getCode(),
                 $e,
                 // If this fails, an RuntimeException will be thrown
-                Response::from($e->getResponse()->getBody()->getContents()),
+                Response::from($e->getResponse()),
                 $e->getResponse()->getStatusCode(),
                 $e->getResponse()->getReasonPhrase()
             );
@@ -81,7 +80,7 @@ class GuzzleHttpClient extends BaseHttpClient
                 $e->getCode(),
                 $e,
                 // If this fails, an RuntimeException will be thrown
-                Response::from($e->getResponse()->getBody()->getContents()),
+                Response::from($e->getResponse()),
                 $e->getResponse()->getStatusCode(),
                 $e->getResponse()->getReasonPhrase()
             );

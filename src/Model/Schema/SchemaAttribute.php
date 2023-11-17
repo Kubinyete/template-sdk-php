@@ -2,8 +2,8 @@
 
 namespace Kubinyete\TemplateSdkPhp\Model\Schema;
 
-use Kubinyete\TemplateSdkPhp\Model\Schema\Exception\SchemaAttributeParseException;
 use Kubinyete\TemplateSdkPhp\Util\StringUtil;
+use Kubinyete\TemplateSdkPhp\Model\Schema\Exception\SchemaAttributeParseException;
 
 class SchemaAttribute
 {
@@ -50,7 +50,7 @@ class SchemaAttribute
 
     public function getType(): string
     {
-        return StringUtil::classBasename(get_class($this));
+        return get_class($this);
     }
 
     public function getSchema(): Schema

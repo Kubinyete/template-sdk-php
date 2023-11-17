@@ -2,8 +2,8 @@
 
 namespace Kubinyete\TemplateSdkPhp\Exception;
 
-use Kubinyete\TemplateSdkPhp\Http\Response;
 use Throwable;
+use Kubinyete\TemplateSdkPhp\Http\Response;
 
 abstract class HttpException extends BaseException
 {
@@ -16,14 +16,9 @@ abstract class HttpException extends BaseException
         int $code = 0,
         ?Throwable $previous = null,
         ?Response $response = null,
-        ?int $statusCode = null,
-        ?string $statusMessage = null
     ) {
         parent::__construct($message, $code, $previous);
-
         $this->response = $response;
-        $this->statusCode = $statusCode;
-        $this->statusMessage = $statusMessage;
     }
 
     public function getResponse(): ?Response
@@ -33,11 +28,11 @@ abstract class HttpException extends BaseException
 
     public function getStatusCode(): ?int
     {
-        return $this->statusCode;
+        return $this->response?->getStatusCode();
     }
 
     public function getStatusMessage(): ?string
     {
-        return $this->statusMessage;
+        return $this->response?->getStatusMessage();
     }
 }
