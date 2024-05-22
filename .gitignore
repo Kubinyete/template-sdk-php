@@ -2,3 +2,4 @@
 phpunit.xml
 phpunit.personal.xml
 .phpunit.cache
+composer.lock

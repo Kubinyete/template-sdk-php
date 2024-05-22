@@ -7,6 +7,7 @@ use Kubinyete\TemplateSdkPhp\Model\Schema\Exception\SchemaAttributeParseExceptio
 class SchemaStringAttribute extends SchemaAttribute
 {
     protected int $limit = 0;
+    protected int $limitBytes = 0;
     protected int $min = 0;
     protected int $max = 0;
     protected bool $truncate = false;
@@ -17,10 +18,22 @@ class SchemaStringAttribute extends SchemaAttribute
         return $this;
     }
 
+    public function limitByteSize(int $limit): self
+    {
+        $this->limitBytes = max($limit, 0);
+        return $this;
+    }
+
     public function truncate(int $limit): self
     {
         $this->truncate = true;
         return $this->limit($limit);
+    }
+
+    public function truncateByteSize(int $limit): self
+    {
+        $this->truncate = true;
+        return $this->limitByteSize($limit);
     }
 
     public function between(int $min, int $max = 0): self
@@ -45,15 +58,18 @@ class SchemaStringAttribute extends SchemaAttribute
             throw new SchemaAttributeParseException($this, "Provided value '$value' is not an string");
         }
 
-        if ($this->limit > 0 && strlen($value) > $this->limit) {
-            if (!$this->truncate) {
-                throw new SchemaAttributeParseException($this, "Provided value '$value' is exceeding the limit of {$this->limit} characters");
-            }
+        $this->ensureCharacterSizeRequirements($value);
+        $value = $this->ensureCharacterSizeFits($value);
+        $value = $this->ensureByteSizeFits($value);
+        return $value;
+    }
 
-            $value = substr($value, 0, $this->limit);
-        }
+    //
 
-        $len = strlen($value);
+    private function ensureCharacterSizeRequirements(string $value): void
+    {
+        $len = mb_strlen($value);
+
         if ($this->min > 0 && $len < $this->min) {
             throw new SchemaAttributeParseException($this, "Provided value '$value' is shorter than the minimum of {$this->min} characters");
         }
@@ -61,7 +77,23 @@ class SchemaStringAttribute extends SchemaAttribute
         if ($this->max > 0 && $len > $this->max) {
             throw new SchemaAttributeParseException($this, "Provided value '$value' is longer than the maximum of {$this->max} characters");
         }
+    }
 
+    private function ensureCharacterSizeFits(string $value): string
+    {
+        if ($this->limit > 0 && mb_strlen($value) > $this->limit) {
+            if (!$this->truncate) throw new SchemaAttributeParseException($this, "Provided value '$value' is exceeding the limit of {$this->limit} character(s)");
+            return mb_substr($value, 0, $this->limit);
+        }
+        return $value;
+    }
+
+    private function ensureByteSizeFits(string $value): string
+    {
+        if ($this->limitBytes > 0 && strlen($value) > $this->limitBytes) {
+            if (!$this->truncate) throw new SchemaAttributeParseException($this, "Provided value '$value' is exceeding the limit of {$this->limitBytes} byte(s)");
+            return mb_strcut($value, 0, $this->limitBytes);
+        }
         return $value;
     }
 }
