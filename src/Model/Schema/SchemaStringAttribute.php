@@ -58,9 +58,10 @@ class SchemaStringAttribute extends SchemaAttribute
             throw new SchemaAttributeParseException($this, "Provided value '$value' is not an string");
         }
 
-        $this->ensureCharacterSizeRequirements($value);
         $value = $this->ensureCharacterSizeFits($value);
         $value = $this->ensureByteSizeFits($value);
+        $this->ensureCharacterSizeRequirements($value);
+
         return $value;
     }
 
