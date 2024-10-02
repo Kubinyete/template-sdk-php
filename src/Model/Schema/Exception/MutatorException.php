@@ -4,6 +4,4 @@ namespace Kubinyete\TemplateSdkPhp\Model\Schema\Exception;
 
 use Exception;
 
-abstract class MutatorException extends Exception
-{
-}
+abstract class MutatorException extends Exception {}

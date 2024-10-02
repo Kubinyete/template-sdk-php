@@ -3,6 +3,7 @@
 namespace Kubinyete\TemplateSdkPhp\Model\Schema;
 
 use DateTimeInterface;
+use Kubinyete\TemplateSdkPhp\Model\Model;
 use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaAttribute;
 use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaDateAttribute;
 use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaStringAttribute;

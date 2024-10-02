@@ -2,17 +2,18 @@
 
 namespace Kubinyete\TemplateSdkPhp\Model;
 
+use Closure;
+use UnexpectedValueException;
+use Kubinyete\TemplateSdkPhp\Util\ClassUtil;
+use Kubinyete\TemplateSdkPhp\Model\Schema\Schema;
+use Kubinyete\TemplateSdkPhp\Model\Schema\Mutator;
+use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaBuilder;
+use Kubinyete\TemplateSdkPhp\Model\Schema\MutatorContext;
+use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaAttribute;
+use Kubinyete\TemplateSdkPhp\Model\SerializableModelInterface;
+use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaRelationAttribute;
 use Kubinyete\TemplateSdkPhp\Model\Schema\Exception\MutatorAttributeException;
 use Kubinyete\TemplateSdkPhp\Model\Schema\Exception\SchemaAttributeParseException;
-use Kubinyete\TemplateSdkPhp\Model\Schema\Mutator;
-use Kubinyete\TemplateSdkPhp\Model\Schema\MutatorContext;
-use Kubinyete\TemplateSdkPhp\Model\Schema\Schema;
-use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaAttribute;
-use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaBuilder;
-use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaRelationAttribute;
-use Kubinyete\TemplateSdkPhp\Model\SerializableModelInterface;
-use Kubinyete\TemplateSdkPhp\Util\ClassUtil;
-use UnexpectedValueException;
 
 abstract class Model implements SerializableModelInterface
 {
@@ -22,29 +23,47 @@ abstract class Model implements SerializableModelInterface
     private string $name;
     private array $mutators;
 
-    public final function __construct(array $data = [], array $relations = [], ?string $name = null)
+    private static array $globalSchema;
+
+    public function __construct(array $data = [], array $relations = [], ?string $name = null)
     {
         $this->data = $data;
         $this->relations = $relations;
-        $this->name = $name ?? ClassUtil::basename(static::class);
-        $this->schema = new Schema($this->name);
+        $this->name = $name ?? $this->useDefaultName();
 
-        $this->schema($this->schema->builder());
+        $this->mutators = [];
+
+        $this->schema = $this->useContextualSchema();
         $this->schemaLoadDefaults();
     }
 
     //
 
-    protected abstract function schema(SchemaBuilder $schema): Schema;
+    private function useDefaultName(): string
+    {
+        return basename(str_replace('\\', '/', get_class($this)));
+    }
+
+    private function useContextualSchema(): Schema
+    {
+        $schema = static::$globalSchema[static::class] ?? null;
+        if (is_null($schema)) {
+            $schema = static::$globalSchema[static::class] = new Schema($this->name);
+            $this->schema($schema->builder());
+        }
+        return $schema;
+    }
+
+    protected abstract function schema(SchemaBuilder $schema);
 
     //
 
-    public function getName(): string
+    public function getModelName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setModelName(string $name): self
     {
         $this->name = $name;
         return $this;
@@ -60,6 +79,13 @@ abstract class Model implements SerializableModelInterface
     {
         foreach ($data as $key => $value) {
             $this->set($key, $value);
+        }
+
+        foreach ($this->schema->getAttributes() as $attr) {
+            /** @var SchemaAttribute $schema */
+            if ($attr->isRequired() && !array_key_exists($attr->getName(), $data)) {
+                throw new SchemaAttributeParseException($attr, "Missing required attribute");
+            }
         }
 
         return $this;
@@ -113,7 +139,37 @@ abstract class Model implements SerializableModelInterface
         return $serialized;
     }
 
+    public function toArray(): array
+    {
+        $mapper = static function (Closure $mapper, array $items): array {
+            return array_map(
+                static fn($item) => is_iterable($item) ? $mapper($mapper, $item) : $item->toArray(),
+                $items
+            );
+        };
+
+        return array_merge(
+            $this->getAttributes(),
+            $mapper($mapper, $this->getRelations())
+        );
+    }
+
     //
+
+    public function getAttributes(): array
+    {
+        return $this->data;
+    }
+
+    public function getRelations(): array
+    {
+        return $this->relations;
+    }
+
+    public function getAllAttributes(): array
+    {
+        return array_merge($this->data, $this->relations);
+    }
 
     protected function getRawAttribute(string $name)
     {
@@ -173,20 +229,33 @@ abstract class Model implements SerializableModelInterface
         return $mutator;
     }
 
-    //
-
-    public static function parse(array $data): self
+    protected function schemaMutate(Closure $callback): void
     {
-        $model = new static();
-        return $model->fill($data);
+        if ($this->schema === (static::$globalSchema[static::class] ?? null)) {
+            $this->schema = clone $this->schema;
+        }
+
+        $callback($this->schema->builder());
     }
 
-    public static function tryParse(array $data): ?self
+    //
+
+    public static function parse(array $data): static
+    {
+        return self::make()->fill($data);
+    }
+
+    public static function tryParse(array $data): ?static
     {
         try {
-            return self::parse($data);
+            return static::parse($data);
         } catch (SchemaAttributeParseException | MutatorAttributeException $e) {
             return null;
         }
+    }
+
+    public static function make(): static
+    {
+        return new static();
     }
 }

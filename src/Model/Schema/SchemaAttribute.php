@@ -14,6 +14,7 @@ class SchemaAttribute
     protected bool $hidden;
     protected $default;
     protected $hasDefault;
+    protected $required;
 
     public function __construct(Schema $schema, string $name)
     {
@@ -25,6 +26,8 @@ class SchemaAttribute
 
         $this->default = null;
         $this->hasDefault = false;
+
+        $this->required = false;
     }
 
     public function getName(): string
@@ -50,7 +53,7 @@ class SchemaAttribute
 
     public function getType(): string
     {
-        return get_class($this);
+        return basename(str_replace('\\', '/', get_class($this)));
     }
 
     public function getSchema(): Schema
@@ -78,6 +81,11 @@ class SchemaAttribute
         return $this->hasDefault;
     }
 
+    public function isRequired(): bool
+    {
+        return $this->required;
+    }
+
     //
 
     public function nullable(bool $value = true): self
@@ -96,6 +104,13 @@ class SchemaAttribute
     {
         $this->default = $value;
         $this->hasDefault = true;
+        return $this;
+    }
+
+    public function required(bool $default = true): self
+    {
+        $this->required = $default;
+
         return $this;
     }
 

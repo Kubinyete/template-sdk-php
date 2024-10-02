@@ -58,7 +58,7 @@ class SchemaRelationAttribute extends SchemaAttribute
             }
 
             return $this->newRelationClass()
-                ->setName($this->getName())
+                ->setModelName($this->getName())
                 ->setSchemaName($this->getAbsoluteName())
                 ->fill($e);
         };
@@ -117,7 +117,7 @@ class SchemaRelationAttribute extends SchemaAttribute
                 $value = iterator_to_array($value);
             }
 
-            return array_map(fn (Model $model) => $model->jsonSerialize(), $value);
+            return array_map(fn(Model $model) => $model->jsonSerialize(), $value);
         }
 
         return $value->jsonSerialize();

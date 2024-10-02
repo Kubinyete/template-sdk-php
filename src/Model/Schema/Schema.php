@@ -3,6 +3,7 @@
 namespace Kubinyete\TemplateSdkPhp\Model\Schema;
 
 use DateTimeInterface;
+use Kubinyete\TemplateSdkPhp\Model\Model;
 use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaAttribute;
 use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaBoolAttribute;
 use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaDateAttribute;
@@ -75,10 +76,6 @@ final class Schema
 
     public function builder(): SchemaBuilder
     {
-        if (!empty($this->props)) {
-            $this->props = [];
-        }
-
         return SchemaBuilder::from($this);
     }
 

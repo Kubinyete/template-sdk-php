@@ -25,7 +25,7 @@ class SchemaArrayAttribute extends SchemaAttribute
         }
 
         if (is_array($value)) {
-            return array_map(fn ($v) => $this->childrenSchema->parse($v), $value);
+            return array_map(fn($v) => $this->childrenSchema->parse($v), $value);
         }
 
         $arrayDefinition = $this->getArrayDefinitionString();
@@ -44,7 +44,7 @@ class SchemaArrayAttribute extends SchemaAttribute
             }
 
             return array_map(
-                fn ($serializable) => $this->childrenSchema ? $this->childrenSchema->serialize($serializable) : $serializable,
+                fn($serializable) => $this->childrenSchema ? $this->childrenSchema->serialize($serializable) : $serializable,
                 $value
             );
         }

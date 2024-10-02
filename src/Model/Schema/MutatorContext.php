@@ -3,9 +3,9 @@
 namespace Kubinyete\TemplateSdkPhp\Model\Schema;
 
 use Closure;
-use Kubinyete\TemplateSdkPhp\Model\Schema\Exception\MutatorAttributeException;
-use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaAttribute;
 use Kubinyete\TemplateSdkPhp\Model\Model;
+use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaAttribute;
+use Kubinyete\TemplateSdkPhp\Model\Schema\Exception\MutatorAttributeException;
 
 final class MutatorContext
 {
@@ -35,7 +35,7 @@ final class MutatorContext
 
     public function getAttributeRelativeName(): string
     {
-        return implode('.', [$this->target->getName(), $this->attribute]);
+        return implode('.', [$this->target->getModelName(), $this->attribute]);
     }
 
     public function getAttributeAbsoluteName(): string
