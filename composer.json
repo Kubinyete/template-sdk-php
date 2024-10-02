@@ -5,7 +5,6 @@
     "autoload": {
         "psr-4": {
             "Kubinyete\\TemplateSdkPhp\\": "src/",
-            "Kubinyete\\OpenMeteoSdkPhp\\": "examples/OpenMeteo"
         }
     },
     "authors": [
