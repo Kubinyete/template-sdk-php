@@ -4,7 +4,7 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "Kubinyete\\TemplateSdkPhp\\": "src/",
+            "Kubinyete\\TemplateSdkPhp\\": "src/"
         }
     },
     "authors": [
