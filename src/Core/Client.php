@@ -151,7 +151,7 @@ abstract class Client implements CompositePathInterface
             return $this->responseReceived($response) ?? $response;
         } catch (HttpException $e) {
             $response = $e->getResponse();
-            $this->logger->error("({$requestId}) {$method} {$url} : Read failed with status code {$e->getStatusCode()} {$e->getStatusMessage()}", ['exception' => strval($e), 'response' => $response ? $response->getBody() : null]);
+            $this->logger->debug("({$requestId}) {$method} {$url} : Read failed with status code {$e->getStatusCode()} {$e->getStatusMessage()}", ['exception' => strval($e), 'response' => $response ? $response->getBody() : null]);
 
             if ($response) {
                 $response->setSerializer($outputSerializer);
@@ -159,7 +159,7 @@ abstract class Client implements CompositePathInterface
 
             $this->exceptionThrown($e);
         } catch (Throwable $e) {
-            $this->logger->error("({$requestId}) {$method} {$url} : Read failed with unhandled exception", ['exception' => strval($e)]);
+            $this->logger->debug("({$requestId}) {$method} {$url} : Read failed with unhandled exception", ['exception' => strval($e)]);
             $this->exceptionThrown($e);
         }
     }
