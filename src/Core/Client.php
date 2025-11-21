@@ -1,16 +1,16 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Core;
+namespace Teamipag\Sdk\Core;
 
 use Throwable;
 use JsonSerializable;
 use Psr\Log\NullLogger;
 use Psr\Log\LoggerInterface;
-use Kubinyete\TemplateSdkPhp\Http\Response;
-use Kubinyete\TemplateSdkPhp\IO\SerializerInterface;
-use Kubinyete\TemplateSdkPhp\Exception\HttpException;
-use Kubinyete\TemplateSdkPhp\Http\Client\BaseHttpClient;
-use Kubinyete\TemplateSdkPhp\Path\CompositePathInterface;
+use Teamipag\Sdk\Http\Response;
+use Teamipag\Sdk\IO\SerializerInterface;
+use Teamipag\Sdk\Exception\HttpException;
+use Teamipag\Sdk\Http\Client\BaseHttpClient;
+use Teamipag\Sdk\Path\CompositePathInterface;
 
 abstract class Client implements CompositePathInterface
 {

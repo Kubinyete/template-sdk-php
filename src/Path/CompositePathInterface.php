@@ -1,6 +1,6 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Path;
+namespace Teamipag\Sdk\Path;
 
 interface CompositePathInterface
 {

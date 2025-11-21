@@ -1,6 +1,6 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Util;
+namespace Teamipag\Sdk\Util;
 
 abstract class ArrayUtil
 {

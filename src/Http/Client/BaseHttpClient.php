@@ -1,6 +1,6 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Http\Client;
+namespace Teamipag\Sdk\Http\Client;
 
 use Psr\Http\Message\ResponseInterface;
 

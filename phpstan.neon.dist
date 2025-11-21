@@ -1,0 +1,10 @@
+parameters:
+    level: 8
+    paths:
+        - src
+    
+    excludePaths:
+        - vendor
+
+    ignoreErrors:
+        - message: '#^Unsafe usage of new static\(\)\.$#'

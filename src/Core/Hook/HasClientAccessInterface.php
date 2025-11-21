@@ -1,8 +1,8 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Core\Hook;
+namespace Teamipag\Sdk\Core\Hook;
 
-use Kubinyete\TemplateSdkPhp\Core\Client;
+use Teamipag\Sdk\Core\Client;
 
 interface HasClientAccessInterface
 {

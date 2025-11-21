@@ -1,8 +1,8 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\IO;
+namespace Teamipag\Sdk\IO;
 
-use Kubinyete\TemplateSdkPhp\Exception\ParseException;
+use Teamipag\Sdk\Exception\ParseException;
 
 class JsonSerializer implements SerializerInterface
 {

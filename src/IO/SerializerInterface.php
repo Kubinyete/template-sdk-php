@@ -1,6 +1,6 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\IO;
+namespace Teamipag\Sdk\IO;
 
 interface SerializerInterface
 {

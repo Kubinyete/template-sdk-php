@@ -1,12 +1,12 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Core;
+namespace Teamipag\Sdk\Core;
 
 use JsonSerializable;
-use Kubinyete\TemplateSdkPhp\Http\Response;
-use Kubinyete\TemplateSdkPhp\IO\SerializerInterface;
-use Kubinyete\TemplateSdkPhp\Path\CompositePathInterface;
-use Kubinyete\TemplateSdkPhp\Util\PathUtil;
+use Teamipag\Sdk\Http\Response;
+use Teamipag\Sdk\IO\SerializerInterface;
+use Teamipag\Sdk\Path\CompositePathInterface;
+use Teamipag\Sdk\Util\PathUtil;
 
 abstract class Endpoint implements CompositePathInterface
 {

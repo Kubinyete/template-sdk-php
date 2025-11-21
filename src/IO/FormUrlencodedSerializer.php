@@ -1,12 +1,10 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\IO;
+namespace Teamipag\Sdk\IO;
 
 class FormUrlencodedSerializer implements SerializerInterface
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function serialize(array $data): string
     {

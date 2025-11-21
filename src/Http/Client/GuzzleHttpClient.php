@@ -1,6 +1,6 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Http\Client;
+namespace Teamipag\Sdk\Http\Client;
 
 use RuntimeException;
 use GuzzleHttp\Client;
@@ -10,10 +10,10 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\ConnectException;
-use Kubinyete\TemplateSdkPhp\Http\Response;
-use Kubinyete\TemplateSdkPhp\Exception\HttpClientException;
-use Kubinyete\TemplateSdkPhp\Exception\HttpServerException;
-use Kubinyete\TemplateSdkPhp\Exception\HttpTransferException;
+use Teamipag\Sdk\Http\Response;
+use Teamipag\Sdk\Exception\HttpClientException;
+use Teamipag\Sdk\Exception\HttpServerException;
+use Teamipag\Sdk\Exception\HttpTransferException;
 
 class GuzzleHttpClient extends BaseHttpClient
 {

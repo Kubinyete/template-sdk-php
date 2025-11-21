@@ -1,7 +1,5 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Exception;
+namespace Teamipag\Sdk\Exception;
 
-class HttpClientException extends HttpException
-{
-}
+class HttpClientException extends HttpException {}

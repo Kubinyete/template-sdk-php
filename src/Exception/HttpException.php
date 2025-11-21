@@ -1,9 +1,9 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Exception;
+namespace Teamipag\Sdk\Exception;
 
 use Throwable;
-use Kubinyete\TemplateSdkPhp\Http\Response;
+use Teamipag\Sdk\Http\Response;
 
 abstract class HttpException extends BaseException
 {

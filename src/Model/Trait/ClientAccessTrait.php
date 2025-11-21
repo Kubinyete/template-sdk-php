@@ -1,12 +1,12 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Model\Trait;
+namespace Teamipag\Sdk\Model\Trait;
 
 use Closure;
 use Throwable;
 use UnexpectedValueException;
-use Kubinyete\TemplateSdkPhp\Core\Client;
-use Kubinyete\TemplateSdkPhp\Core\Hook\HasClientAccessInterface;
+use Teamipag\Sdk\Core\Client;
+use Teamipag\Sdk\Core\Hook\HasClientAccessInterface;
 
 trait ClientAccessTrait
 {

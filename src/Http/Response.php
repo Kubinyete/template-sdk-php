@@ -1,12 +1,12 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Http;
+namespace Teamipag\Sdk\Http;
 
 use Psr\Http\Message\ResponseInterface;
-use Kubinyete\TemplateSdkPhp\Util\ArrayUtil;
-use Kubinyete\TemplateSdkPhp\IO\JsonSerializer;
-use Kubinyete\TemplateSdkPhp\IO\MutatorInterface;
-use Kubinyete\TemplateSdkPhp\IO\SerializerInterface;
+use Teamipag\Sdk\Util\ArrayUtil;
+use Teamipag\Sdk\IO\JsonSerializer;
+use Teamipag\Sdk\IO\MutatorInterface;
+use Teamipag\Sdk\IO\SerializerInterface;
 
 class Response
 {
