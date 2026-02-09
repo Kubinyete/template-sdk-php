@@ -3,11 +3,11 @@
 namespace Teamipag\Sdk\Model\Trait;
 
 use Closure;
-use Throwable;
-use UnexpectedValueException;
 use Teamipag\Sdk\Core\Client;
+use UnexpectedValueException;
 use Teamipag\Sdk\Core\Hook\HasClientAccessInterface;
 
+// @phpstan-ignore-next-line
 trait ClientAccessTrait
 {
     private ?Client $client = null;

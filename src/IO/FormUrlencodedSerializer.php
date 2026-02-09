@@ -2,6 +2,8 @@
 
 namespace Teamipag\Sdk\IO;
 
+use InvalidArgumentException;
+
 class FormUrlencodedSerializer implements SerializerInterface
 {
     public function __construct() {}
@@ -15,10 +17,10 @@ class FormUrlencodedSerializer implements SerializerInterface
                 $key = $key . '[]';
 
                 foreach ($value as $v) {
-                    $output .= $key . '=' . urlencode($v) . '&';
+                    $output .= $key . '=' . urlencode($this->normalize($v)) . '&';
                 }
             } else {
-                $output .= $key . '=' . urlencode($value) . '&';
+                $output .= $key . '=' . urlencode($this->normalize($value)) . '&';
             }
         }
 
@@ -31,7 +33,7 @@ class FormUrlencodedSerializer implements SerializerInterface
         $output = [];
 
         foreach ($pieces as $piece) {
-            [$key, $value] = explode('=', $piece);
+            [$key, $value] = explode('=', $piece, 2);
             $output[$key] = urldecode($value);
         }
 
@@ -41,5 +43,22 @@ class FormUrlencodedSerializer implements SerializerInterface
     public function getContentType(): string
     {
         return 'application/x-www-form-urlencoded';
+    }
+
+    private function normalize(mixed $value): string
+    {
+        if (is_null($value)) {
+            return '';
+        }
+
+        if (is_bool($value)) {
+            return $value ? '1' : '0';
+        }
+
+        if (is_scalar($value)) {
+            return (string) $value;
+        }
+
+        throw new InvalidArgumentException("Unsupported value type for form-urlencoded serialization: " . get_debug_type($value));
     }
 }

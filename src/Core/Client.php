@@ -14,7 +14,7 @@ use Teamipag\Sdk\Path\CompositePathInterface;
 
 abstract class Client implements CompositePathInterface
 {
-    private static $requestCounter = 0;
+    private static int $requestCounter = 0;
 
     protected Environment $environment;
     protected BaseHttpClient $httpClient;
@@ -38,27 +38,34 @@ abstract class Client implements CompositePathInterface
 
     //
 
-    protected function serialize($body, ?SerializerInterface $serializer = null): ?string
+    /**
+     * Serializes the given body using the provided serializer, or the default serializer if none is provided. If no serializer is available, returns the body as-is.
+     *
+     * @param mixed $body
+     * @param SerializerInterface|null $serializer
+     * @return string|null
+     */
+    protected function serialize(mixed $body, ?SerializerInterface $serializer = null): ?string
     {
         $serializer ??= $this->defaultSerializer;
 
         if (!$serializer) {
-            return $body;
+            return null;
         }
 
         if ($body instanceof JsonSerializable) {
             $body = $body->jsonSerialize();
         }
 
-        if (is_array($body) && $serializer) {
+        if (is_array($body)) {
             $body = $serializer->serialize($body);
         }
 
-        if (is_object($body) && $serializer) {
+        if (is_object($body)) {
             $body = $serializer->serialize(get_object_vars($body));
         }
 
-        return $body;
+        return is_string($body) ? $body : null;
     }
 
     //
@@ -75,40 +82,104 @@ abstract class Client implements CompositePathInterface
 
     //
 
+    /**
+     * Performs an HTTP request to the given URL with the specified method, body, query parameters, and headers. It also handles serialization of the request body and deserialization of the response body using the provided serializers. If an HTTP error occurs, it throws an HttpException with the response details.
+     *
+     * @param string $path
+     * @param array<array-key,mixed> $query
+     * @param array<array-key,mixed> $header
+     * @return Response
+     */
     protected function get(string $path, array $query = [], array $header = []): Response
     {
         return $this->request(__FUNCTION__, $this->joinPath($path), null, $query, $header);
     }
 
-    protected function post(string $path, $body, array $query = [], array $header = []): Response
+    /**
+     * Performs a POST request to the given URL with the specified body, query parameters, and headers. It also handles serialization of the request body and deserialization of the response body using the provided serializers. If an HTTP error occurs, it throws an HttpException with the response details.
+     *
+     * @param string $path
+     * @param mixed $body
+     * @param array<array-key,mixed> $query
+     * @param array<array-key,mixed> $header
+     * @return Response
+     */
+    protected function post(string $path, mixed $body, array $query = [], array $header = []): Response
     {
         return $this->request(__FUNCTION__, $this->joinPath($path), $body, $query, $header);
     }
 
-    protected function put(string $path, $body, array $query = [], array $header = []): Response
+    /**
+     * Performs a PUT request to the given URL with the specified body, query parameters, and headers. It also handles serialization of the request body and deserialization of the response body using the provided serializers. If an HTTP error occurs, it throws an HttpException with the response details.
+     *
+     * @param string $path
+     * @param mixed $body
+     * @param array<array-key,mixed> $query
+     * @param array<array-key,mixed> $header
+     * @return Response
+     */
+    protected function put(string $path, mixed $body, array $query = [], array $header = []): Response
     {
         return $this->request(__FUNCTION__, $this->joinPath($path), $body, $query, $header);
     }
 
-    protected function patch(string $path, $body, array $query = [], array $header = []): Response
+    /**
+     * Performs a PATCH request to the given URL with the specified body, query parameters, and headers. It also handles serialization of the request body and deserialization of the response body using the provided serializers. If an HTTP error occurs, it throws an HttpException with the response details.
+     *
+     * @param string $path
+     * @param mixed $body
+     * @param array<array-key,mixed> $query
+     * @param array<array-key,mixed> $header
+     * @return Response
+     */
+    protected function patch(string $path, mixed $body, array $query = [], array $header = []): Response
     {
         return $this->request(__FUNCTION__, $this->joinPath($path), $body, $query, $header);
     }
 
-    protected function delete(string $path, $body, array $query = [], array $header = []): Response
+    /**
+     * Performs a DELETE request to the given URL with the specified body, query parameters, and headers. It also handles serialization of the request body and deserialization of the response body using the provided serializers. If an HTTP error occurs, it throws an HttpException with the response details.
+     *
+     * @param string $path
+     * @param mixed $body
+     * @param array<array-key,mixed> $query
+     * @param array<array-key,mixed> $header
+     * @return Response
+     */
+    protected function delete(string $path, mixed $body, array $query = [], array $header = []): Response
     {
         return $this->request(__FUNCTION__, $this->joinPath($path), $body, $query, $header);
     }
 
+    /**
+     * Performs a HEAD request to the given URL with the specified body, query parameters, and headers. It also handles serialization of the request body and deserialization of the response body using the provided serializers. If an HTTP error occurs, it throws an HttpException with the response details.
+     *
+     * @param string $path
+     * @param array<array-key,mixed> $query
+     * @param array<array-key,mixed> $header
+     * @return Response
+     */
     protected function head(string $path, array $query = [], array $header = []): Response
     {
         return $this->request(__FUNCTION__, $this->joinPath($path), null, $query, $header);
     }
 
+    /**
+     * Performs a request to the given URL with the specified method, body, query parameters, and headers. It also handles serialization of the request body and deserialization of the response body using the provided serializers. If an HTTP error occurs, it throws an HttpException with the response details.
+     *
+     * @param string $method
+     * @param string $url
+     * @param mixed $body
+     * @param array<array-key,mixed> $query
+     * @param array<array-key,mixed> $header
+     * @param SerializerInterface|null $inputSerializer
+     * @param SerializerInterface|null $outputSerializer
+     * @return Response
+     */
     public function request(
         string $method,
         string $url,
-        $body,
+        mixed $body,
         array $query = [],
         array $header = [],
         ?SerializerInterface $inputSerializer = null,
@@ -127,7 +198,7 @@ abstract class Client implements CompositePathInterface
             $header['Accept'] = $header['Accept'] ?? $outputSerializer->getContentType();
         }
 
-        $this->logger->debug("({$requestId}) {$method} {$url} : Sending request", ['body' => $body, 'query' => $query, 'header' => $header]);
+        $this->logger?->debug("({$requestId}) {$method} {$url} : Sending request", ['body' => $body, 'query' => $query, 'header' => $header]);
 
         try {
             $response = $this->httpClient->request(
@@ -147,20 +218,20 @@ abstract class Client implements CompositePathInterface
             $response = Response::from($response);
             $response->setSerializer($outputSerializer);
 
-            $this->logger->debug("({$requestId}) {$method} {$url} : Read successful", ['response' => $response->getBody()]);
-            return $this->responseReceived($response) ?? $response;
+            $this->logger?->debug("({$requestId}) {$method} {$url} : Read successful", ['response' => $response->getBody()]);
+            return $this->responseReceived($response);
         } catch (HttpException $e) {
             $response = $e->getResponse();
-            $this->logger->debug("({$requestId}) {$method} {$url} : Read failed with status code {$e->getStatusCode()} {$e->getStatusMessage()}", ['exception' => strval($e), 'response' => $response ? $response->getBody() : null]);
+            $this->logger?->debug("({$requestId}) {$method} {$url} : Read failed with status code {$e->getStatusCode()} {$e->getStatusMessage()}", ['exception' => strval($e), 'response' => $response ? $response->getBody() : null]);
 
             if ($response) {
-                $response->setSerializer($outputSerializer);
+                $e->getResponse()?->setSerializer($outputSerializer);
             }
 
-            $this->exceptionThrown($e);
+            throw $e;
         } catch (Throwable $e) {
-            $this->logger->debug("({$requestId}) {$method} {$url} : Read failed with unhandled exception", ['exception' => strval($e)]);
-            $this->exceptionThrown($e);
+            $this->logger?->debug("({$requestId}) {$method} {$url} : Read failed with unhandled exception", ['exception' => strval($e)]);
+            throw $e;
         }
     }
 

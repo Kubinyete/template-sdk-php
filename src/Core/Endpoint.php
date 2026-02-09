@@ -2,11 +2,10 @@
 
 namespace Teamipag\Sdk\Core;
 
-use JsonSerializable;
 use Teamipag\Sdk\Http\Response;
+use Teamipag\Sdk\Util\PathUtil;
 use Teamipag\Sdk\IO\SerializerInterface;
 use Teamipag\Sdk\Path\CompositePathInterface;
-use Teamipag\Sdk\Util\PathUtil;
 
 abstract class Endpoint implements CompositePathInterface
 {
@@ -19,37 +18,88 @@ abstract class Endpoint implements CompositePathInterface
     {
         $this->client = $client;
         $this->parent = $parent;
-        $this->location = $this->location ?? $location;
+        $this->location = $this->location ?? $location ?? '';
         $this->serializer = $serializer;
     }
 
     //
 
+    /**
+     * Performs a GET request to the endpoint.
+     *
+     * @param array<array-key,mixed> $query
+     * @param array<array-key,mixed> $header
+     * @param string|null $relativeUrl
+     * @return Response
+     */
     protected function get(array $query = [], array $header = [], ?string $relativeUrl = null): Response
     {
         return $this->request(__FUNCTION__, null, $query, $header, $relativeUrl);
     }
 
-    protected function post($body, array $query = [], array $header = [], ?string $relativeUrl = null): Response
+    /**
+     * Performs a POST request to the endpoint.
+     *
+     * @param mixed $body
+     * @param array<array-key,mixed> $query
+     * @param array<array-key,mixed> $header
+     * @param string|null $relativeUrl
+     * @return Response
+     */
+    protected function post(mixed $body, array $query = [], array $header = [], ?string $relativeUrl = null): Response
     {
         return $this->request(__FUNCTION__, $body, $query, $header, $relativeUrl);
     }
 
-    protected function put($body, array $query = [], array $header = [], ?string $relativeUrl = null): Response
+    /**
+     * Performs a PUT request to the endpoint.
+     *
+     * @param mixed $body
+     * @param array<array-key,mixed> $query
+     * @param array<array-key,mixed> $header
+     * @param string|null $relativeUrl
+     * @return Response
+     */
+    protected function put(mixed $body, array $query = [], array $header = [], ?string $relativeUrl = null): Response
     {
         return $this->request(__FUNCTION__, $body, $query, $header, $relativeUrl);
     }
 
-    protected function patch($body, array $query = [], array $header = [], ?string $relativeUrl = null): Response
+    /**
+     * Performs a PATCH request to the endpoint.
+     *
+     * @param mixed $body
+     * @param array<array-key,mixed> $query
+     * @param array<array-key,mixed> $header
+     * @param string|null $relativeUrl
+     * @return Response
+     */
+    protected function patch(mixed $body, array $query = [], array $header = [], ?string $relativeUrl = null): Response
     {
         return $this->request(__FUNCTION__, $body, $query, $header, $relativeUrl);
     }
 
+    /**
+     * Performs a DELETE request to the endpoint.
+     *
+     * @param array<array-key,mixed> $query
+     * @param array<array-key,mixed> $header
+     * @param string|null $relativeUrl
+     * @return Response
+     */
     protected function delete(array $query = [], array $header = [], ?string $relativeUrl = null): Response
     {
         return $this->request(__FUNCTION__, null, $query, $header, $relativeUrl);
     }
 
+    /**
+     * Performs a HEAD request to the endpoint.
+     *
+     * @param array<array-key,mixed> $query
+     * @param array<array-key,mixed> $header
+     * @param string|null $relativeUrl
+     * @return Response
+     */
     protected function head(array $query = [], array $header = [], ?string $relativeUrl = null): Response
     {
         return $this->request(__FUNCTION__, null, $query, $header, $relativeUrl);
@@ -57,7 +107,17 @@ abstract class Endpoint implements CompositePathInterface
 
     //
 
-    protected function request(string $method, $body, array $query = [], array $header = [], ?string $relativeUrl = null): Response
+    /**
+     * Performs a request to the endpoint using the given method, body, query and header. The URL is built by joining the endpoint path with the given relative URL (if any).
+     *
+     * @param string $method
+     * @param mixed $body
+     * @param array<array-key,mixed> $query
+     * @param array<array-key,mixed> $header
+     * @param string|null $relativeUrl
+     * @return Response
+     */
+    protected function request(string $method, mixed $body, array $query = [], array $header = [], ?string $relativeUrl = null): Response
     {
         return $this->client->request(
             strtoupper($method),
@@ -78,12 +138,14 @@ abstract class Endpoint implements CompositePathInterface
 
     public function setParent(?CompositePathInterface $parent): void
     {
-        $this->parent = $parent;
+        if (!is_null($parent)) {
+            $this->parent = $parent;
+        }
     }
 
     public function getPath(): string
     {
-        return $this->getParent()->joinPath($this->location);
+        return $this->getParent()?->joinPath($this->location) ?? '';
     }
 
     public function joinPath(string $relative): string
@@ -93,8 +155,9 @@ abstract class Endpoint implements CompositePathInterface
 
     //
 
-    public static function create(Client $client, CompositePathInterface $parent, ?string $location = null, ?SerializerInterface $serializer = null)
+    public static function create(Client $client, CompositePathInterface $parent, ?string $location = null, ?SerializerInterface $serializer = null): static
     {
+        // @phpstan-ignore-next-line
         return new static($client, $parent, $location, $serializer);
     }
 }

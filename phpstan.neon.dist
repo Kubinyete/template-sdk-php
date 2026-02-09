@@ -1,10 +1,11 @@
 parameters:
-    level: 8
+    level: max
     paths:
         - src
     
     excludePaths:
         - vendor
 
-    ignoreErrors:
-        - message: '#^Unsafe usage of new static\(\)\.$#'
+    treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: true
+    inferPrivatePropertyTypeFromConstructor: true
