@@ -14,15 +14,15 @@ To get started, just extend the base `Core/Client` and create your first endpoin
 # OpenMeteoClient.php
 <?php
 
-namespace Kubinyete\ExampleSdkPhp;
+namespace Teamipag\Sdk;
 
-use Kubinyete\ExampleSdkPhp\Endpoint\ForecastEndpoint;
-use Kubinyete\ExampleSdkPhp\Exception\OpenMeteoException;
-use Kubinyete\ExampleSdkPhp\Client;
-use Kubinyete\ExampleSdkPhp\Exception\HttpException;
-use Kubinyete\ExampleSdkPhp\Http\Client\GuzzleHttpClient;
-use Kubinyete\ExampleSdkPhp\Http\Response;
-use Kubinyete\ExampleSdkPhp\IO\JsonSerializer;
+use Teamipag\Sdk\Endpoint\ForecastEndpoint;
+use Teamipag\Sdk\Exception\OpenMeteoException;
+use Teamipag\Sdk\Client;
+use Teamipag\Sdk\Exception\HttpException;
+use Teamipag\Sdk\Http\Client\GuzzleHttpClient;
+use Teamipag\Sdk\Http\Response;
+use Teamipag\Sdk\IO\JsonSerializer;
 
 class OpenMeteoClient extends Client
 {
@@ -69,11 +69,11 @@ class OpenMeteoClient extends Client
 # ForecastEndpoint.php
 <?php
 
-namespace Kubinyete\ExampleSdkPhp\Endpoint;
+namespace Teamipag\Sdk\Endpoint;
 
-use Kubinyete\ExampleSdkPhp\Model\Forecast;
-use Kubinyete\ExampleSdkPhp\Model\ForecastSettings;
-use Kubinyete\ExampleSdkPhp\Core\Endpoint;
+use Teamipag\Sdk\Model\Forecast;
+use Teamipag\Sdk\Model\ForecastSettings;
+use Teamipag\Sdk\Core\Endpoint;
 
 class ForecastEndpoint extends Endpoint
 {
@@ -94,9 +94,9 @@ class ForecastEndpoint extends Endpoint
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-use Kubinyete\ExampleSdkPhp\Model\ForecastSettings;
-use Kubinyete\ExampleSdkPhp\OpenMeteoClient;
-use Kubinyete\ExampleSdkPhp\Exception\HttpClientException;
+use Teamipag\Sdk\Model\ForecastSettings;
+use Teamipag\Sdk\OpenMeteoClient;
+use Teamipag\Sdk\Exception\HttpClientException;
 
 $client = new OpenMeteoClient();
 

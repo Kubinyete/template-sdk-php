@@ -1,39 +1,39 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Http\Client;
+namespace Teamipag\Sdk\Http\Client;
 
 use RuntimeException;
 use GuzzleHttp\Client;
-use Psr\Http\Message\StreamInterface;
+use Teamipag\Sdk\Http\Response;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\ConnectException;
-use Kubinyete\TemplateSdkPhp\Http\Response;
-use Kubinyete\TemplateSdkPhp\Exception\HttpClientException;
-use Kubinyete\TemplateSdkPhp\Exception\HttpServerException;
-use Kubinyete\TemplateSdkPhp\Exception\HttpTransferException;
+use Teamipag\Sdk\Exception\HttpClientException;
+use Teamipag\Sdk\Exception\HttpServerException;
+use Teamipag\Sdk\Exception\HttpTransferException;
 
 class GuzzleHttpClient extends BaseHttpClient
 {
     private const DEFAULT_USER_AGENT = 'Template SDK for PHP';
+    private const DEFAULT_CONFIG = [
+        'allow_redirects' => false,
+        'timeout' => 60.00,
+        'connect_timeout' => 10.00,
+        'http_errors' => true,
+        'headers' => [
+            'User-Agent' => self::DEFAULT_USER_AGENT
+        ],
+    ];
 
     protected Client $client;
 
+    /**
+     * @param array<array-key,mixed> $config
+     */
     public function __construct(array $config = [])
     {
-        static $default = [
-            'allow_redirects' => false,
-            'timeout' => 60.00,
-            'connect_timeout' => 10.00,
-            'http_errors' => true,
-            'headers' => [
-                'User-Agent' => self::DEFAULT_USER_AGENT
-            ],
-        ];
-
-        $this->client = new Client(array_merge($default, $config));
+        $this->client = new Client(array_merge(self::DEFAULT_CONFIG, $config));
     }
 
     /**
@@ -47,9 +47,9 @@ class GuzzleHttpClient extends BaseHttpClient
      * @param string $method
      * @param string $url
      * @param string|null $body
-     * @param array $query
-     * @param array $header
-     * @return string|null
+     * @param array<array-key,mixed> $query
+     * @param array<array-key,mixed> $header
+     * @return ResponseInterface
      */
     public function request(string $method, string $url, ?string $body, array $query = [], array $header = []): ResponseInterface
     {
@@ -70,8 +70,6 @@ class GuzzleHttpClient extends BaseHttpClient
                 $e,
                 // If this fails, an RuntimeException will be thrown
                 Response::from($e->getResponse()),
-                $e->getResponse()->getStatusCode(),
-                $e->getResponse()->getReasonPhrase()
             );
         } catch (ClientException $e) {
             // Client-side error 4xx
@@ -81,8 +79,6 @@ class GuzzleHttpClient extends BaseHttpClient
                 $e,
                 // If this fails, an RuntimeException will be thrown
                 Response::from($e->getResponse()),
-                $e->getResponse()->getStatusCode(),
-                $e->getResponse()->getReasonPhrase()
             );
         } catch (RuntimeException $e) {
             // Stream error

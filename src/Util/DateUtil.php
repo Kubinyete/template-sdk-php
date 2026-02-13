@@ -1,6 +1,6 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Util;
+namespace Teamipag\Sdk\Util;
 
 use DateTime;
 use DateTimeInterface;
@@ -10,7 +10,14 @@ abstract class DateUtil
 {
     public const ISO_DATE_FORMAT = 'Y-m-d';
 
-    public static function parseDate($date, string $format = self::ISO_DATE_FORMAT): DateTimeInterface
+    /**
+     * Parses a date string into a DateTimeInterface object. If the input is already a DateTimeInterface, it is returned as-is.
+     *
+     * @param mixed $date
+     * @param string $format
+     * @return DateTimeInterface
+     */
+    public static function parseDate(mixed $date, string $format = self::ISO_DATE_FORMAT): DateTimeInterface
     {
         $date = self::tryParseDate($date, $format);
 
@@ -21,10 +28,21 @@ abstract class DateUtil
         return $date;
     }
 
-    public static function tryParseDate($date, string $format = self::ISO_DATE_FORMAT): ?DateTimeInterface
+    /**
+     * Tries to parse a date string into a DateTimeInterface object. If the input is already a DateTimeInterface, it is returned as-is.
+     *
+     * @param mixed $date
+     * @param string $format
+     * @return DateTimeInterface|null
+     */
+    public static function tryParseDate(mixed $date, string $format = self::ISO_DATE_FORMAT): ?DateTimeInterface
     {
-        if (is_null($date) || $date instanceof DateTimeInterface) {
+        if ($date instanceof DateTimeInterface) {
             return $date;
+        }
+
+        if (is_null($date) || !is_string($date)) {
+            return null;
         }
 
         return DateTime::createFromFormat($format, $date) ?: null;

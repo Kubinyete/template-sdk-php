@@ -1,9 +1,9 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Core;
+namespace Teamipag\Sdk\Core;
 
-use Kubinyete\TemplateSdkPhp\Path\CompositePathInterface;
-use Kubinyete\TemplateSdkPhp\Util\PathUtil;
+use Teamipag\Sdk\Path\CompositePathInterface;
+use Teamipag\Sdk\Util\PathUtil;
 use UnexpectedValueException;
 
 abstract class Environment implements CompositePathInterface

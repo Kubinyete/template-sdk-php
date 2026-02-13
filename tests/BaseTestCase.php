@@ -1,6 +1,6 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Tests;
+namespace Teamipag\Sdk\Tests;
 
 use Faker\Generator;
 use PHPUnit\Framework\TestCase as FrameworkTestCase;

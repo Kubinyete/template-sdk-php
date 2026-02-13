@@ -1,0 +1,11 @@
+parameters:
+    level: max
+    paths:
+        - src
+    
+    excludePaths:
+        - vendor
+
+    treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: true
+    inferPrivatePropertyTypeFromConstructor: true

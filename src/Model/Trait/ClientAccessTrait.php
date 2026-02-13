@@ -1,13 +1,13 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Model\Trait;
+namespace Teamipag\Sdk\Model\Trait;
 
 use Closure;
-use Throwable;
+use Teamipag\Sdk\Core\Client;
 use UnexpectedValueException;
-use Kubinyete\TemplateSdkPhp\Core\Client;
-use Kubinyete\TemplateSdkPhp\Core\Hook\HasClientAccessInterface;
+use Teamipag\Sdk\Core\Hook\HasClientAccessInterface;
 
+// @phpstan-ignore-next-line
 trait ClientAccessTrait
 {
     private ?Client $client = null;

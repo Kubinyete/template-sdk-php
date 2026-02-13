@@ -1,9 +1,7 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Exception;
+namespace Teamipag\Sdk\Exception;
 
 use Exception;
 
-abstract class BaseException extends Exception
-{
-}
+abstract class BaseException extends Exception {}

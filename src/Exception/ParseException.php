@@ -1,7 +1,5 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Exception;
+namespace Teamipag\Sdk\Exception;
 
-class ParseException extends BaseException
-{
-}
+class ParseException extends BaseException {}

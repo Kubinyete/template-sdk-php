@@ -1,11 +1,11 @@
 <?php
 
-namespace Kubinyete\TemplateSdkPhp\Tests;
+namespace Teamipag\Sdk\Tests;
 
 use DateTime;
-use Kubinyete\TemplateSdkPhp\Model\Model;
-use Kubinyete\TemplateSdkPhp\Model\Schema\Schema;
-use Kubinyete\TemplateSdkPhp\Model\Schema\SchemaBuilder;
+use Teamipag\Sdk\Model\Model;
+use Teamipag\Sdk\Model\Schema\Schema;
+use Teamipag\Sdk\Model\Schema\SchemaBuilder;
 
 class User extends Model
 {
